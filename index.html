@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эпичная RPG - Путь Героя</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Загрузочный экран -->
+        <div id="loading-screen">
+            <div class="loading-content">
+                <div class="game-title">
+                    <h1 class="title-main">ЭПИЧНАЯ RPG</h1>
+                    <h2 class="title-sub">ПУТЬ ГЕРОЯ</h2>
+                </div>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <div class="loading-text">Загружается мир приключений...</div>
+            </div>
+        </div>
+
+        <!-- Главное меню -->
+        <div id="main-menu" class="hidden">
+            <div class="menu-content">
+                <div class="menu-title">
+                    <h1>ЭПИЧНАЯ RPG</h1>
+                    <h2>ПУТЬ ГЕРОЯ</h2>
+                </div>
+                <div class="menu-buttons">
+                    <button class="menu-btn primary" onclick="startNewGame()">
+                        <i class="fas fa-play"></i>
+                        НОВАЯ ИГРА
+                    </button>
+                    <button class="menu-btn secondary" onclick="showSettings()">
+                        <i class="fas fa-cog"></i>
+                        НАСТРОЙКИ
+                    </button>
+                    <button class="menu-btn secondary" onclick="showAchievements()">
+                        <i class="fas fa-trophy"></i>
+                        ДОСТИЖЕНИЯ
+                    </button>
+                </div>
+                <div class="version-info">v1.0.0 - Эпичное издание</div>
+            </div>
+        </div>
+
+        <!-- Основной игровой интерфейс -->
+        <div id="game-ui" class="hidden">
+            <!-- Верхняя панель -->
+            <div id="top-panel">
+                <div class="player-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-coins"></i>
+                        <span id="gold-amount">0</span> золота
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        Уровень: <span id="player-level">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-gem"></i>
+                        Камни душ: <span id="soul-stones">0</span>
+                    </div>
+                </div>
+                <div class="reincarnation-info">
+                    <div class="reincarnate-status">
+                        <span id="reincarnate-readiness">Готов к перерождению!</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Основная область игры -->
+            <div id="game-main">
+                <!-- Левая панель - Информация о игроке -->
+                <div id="left-panel">
+                    <div class="player-card">
+                        <div class="player-avatar">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="player-info">
+                            <h3 id="player-name">Герой</h3>
+                            <div class="player-stats-detailed">
+                                <div class="stat-row">
+                                    <span>Здоровье:</span>
+                                    <div class="stat-bar">
+                                        <div class="health-bar" id="health-bar"></div>
+                                    </div>
+                                    <span id="current-health">100/100</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Опыт:</span>
+                                    <div class="stat-bar">
+                                        <div class="exp-bar" id="exp-bar"></div>
+                                    </div>
+                                    <span id="current-exp">0/100</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Инвентарь игрока -->
+                    <div class="equipment-section">
+                        <h4><i class="fas fa-backpack"></i> Экипировка</h4>
+                        <div class="equipment-slots">
+                            <div class="slot weapon-slot" id="weapon-slot">
+                                <div class="slot-icon"><i class="fas fa-sword"></i></div>
+                                <div class="slot-info">
+                                    <div class="item-name">Голые руки</div>
+                                    <div class="item-stats">Урон: 1-2</div>
+                                </div>
+                            </div>
+                            <div class="slot armor-slot" id="armor-slot">
+                                <div class="slot-icon"><i class="fas fa-shield-alt"></i></div>
+                                <div class="slot-info">
+                                    <div class="item-name">Рваная одежда</div>
+                                    <div class="item-stats">Защита: 1</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Центральная область - Бой -->
+                <div id="center-panel">
+                    <div class="battle-area">
+                        <div class="enemy-section">
+                            <div class="enemy-card" id="enemy-card">
+                                <div class="enemy-avatar">
+                                    <i class="fas fa-dragon"></i>
+                                </div>
+                                <div class="enemy-info">
+                                    <h3 id="enemy-name">Слизень</h3>
+                                    <div class="enemy-level">Уровень: <span id="enemy-level">1</span></div>
+                                    <div class="enemy-stats">
+                                        <div class="stat-row">
+                                            <span>Здоровье:</span>
+                                            <div class="stat-bar">
+                                                <div class="enemy-health-bar" id="enemy-health-bar"></div>
+                                            </div>
+                                            <span id="enemy-current-health">50/50</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-area">
+                            <button class="action-btn attack-btn" onclick="attackEnemy()">
+                                <i class="fas fa-sword"></i>
+                                АТАКОВАТЬ!
+                            </button>
+                            <button class="action-btn special-btn" onclick="useSpecialAbility()" id="special-btn" disabled>
+                                <i class="fas fa-magic"></i>
+                                <span id="special-text">Восстановление (30 сек)</span>
+                            </button>
+                        </div>
+
+                        <div class="combat-log" id="combat-log">
+                            <div class="log-entry">Битва началась! Враг: Слизень</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Правая панель - Магазины -->
+                <div id="right-panel">
+                    <!-- Переключатель магазинов -->
+                    <div class="shop-switcher">
+                        <button class="switch-btn active" onclick="switchShop('regular')" id="regular-shop-btn">
+                            <i class="fas fa-store"></i> Обычный магазин
+                        </button>
+                        <button class="switch-btn" onclick="switchShop('soul')" id="soul-shop-btn">
+                            <i class="fas fa-gem"></i> Магазин душ
+                        </button>
+                    </div>
+                    
+                    <!-- Обычный магазин -->
+                    <div class="shop-section" id="regular-shop">
+                        <h4><i class="fas fa-store"></i> Магический Магазин</h4>
+                        <div class="shop-categories">
+                            <button class="category-btn active" onclick="showShopCategory('weapons')">
+                                <i class="fas fa-sword"></i> Оружие
+                            </button>
+                            <button class="category-btn" onclick="showShopCategory('armor')">
+                                <i class="fas fa-shield-alt"></i> Броня
+                            </button>
+                            <button class="category-btn" onclick="showShopCategory('potions')">
+                                <i class="fas fa-flask"></i> Зелья
+                            </button>
+                            <button class="category-btn" onclick="showShopCategory('special')">
+                                <i class="fas fa-gem"></i> Особое
+                            </button>
+                        </div>
+                        <div class="shop-items" id="shop-items">
+                            <!-- Предметы магазина будут загружаться здесь -->
+                        </div>
+                    </div>
+                    
+                    <!-- Магазин камней душ -->
+                    <div class="shop-section hidden" id="soul-shop">
+                        <h4><i class="fas fa-gem"></i> Магазин Камней Душ</h4>
+                        <div class="shop-categories">
+                            <button class="soul-category-btn active" onclick="showSoulShopCategory('weapons')">
+                                <i class="fas fa-sword"></i> Оружие душ
+                            </button>
+                            <button class="soul-category-btn" onclick="showSoulShopCategory('armor')">
+                                <i class="fas fa-shield-alt"></i> Броня душ
+                            </button>
+                            <button class="soul-category-btn" onclick="showSoulShopCategory('upgrades')">
+                                <i class="fas fa-arrow-up"></i> Улучшения
+                            </button>
+                            <button class="soul-category-btn" onclick="showSoulShopCategory('artifacts')">
+                                <i class="fas fa-star"></i> Артефакты
+                            </button>
+                            <button class="soul-category-btn" onclick="showSoulShopCategory('materials')">
+                                <i class="fas fa-gem"></i> Материалы
+                            </button>
+                        </div>
+                        <div class="shop-items" id="soul-shop-items">
+                            <!-- Предметы магазина камней душ будут загружаться здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальные окна -->
+        <!-- Окно перерождения -->
+        <div id="reincarnation-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-redo"></i> Перерождение</h3>
+                    <button class="close-btn" onclick="closeReincarnationModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="reincarnation-info">
+                        <p>Поздравляем! Вы готовы к перерождению!</p>
+                        <p>При перерождении вы получите:</p>
+                        <ul>
+                            <li>+10% ко всему урону</li>
+                            <li>+5% к защите</li>
+                            <li>+15% к получаемому опыту</li>
+                            <li>1 Камень душ</li>
+                        </ul>
+                        <div class="soul-stones-gained">
+                            Вы получите: <span id="soul-stones-gained">1</span> Камней душ
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" onclick="performReincarnation()">
+                            Переродиться!
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeReincarnationModal()">
+                            Позже
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Окно достижений -->
+        <div id="achievements-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-trophy"></i> Достижения</h3>
+                    <button class="close-btn" onclick="closeAchievementsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="achievements-grid" id="achievements-grid">
+                        <!-- Достижения будут загружаться здесь -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Окно настроек -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-cog"></i> Настройки</h3>
+                    <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <label>Звуковые эффекты:</label>
+                        <input type="checkbox" id="sound-effects" checked>
+                    </div>
+                    <div class="setting-group">
+                        <label>Фоновая музыка:</label>
+                        <input type="checkbox" id="background-music" checked>
+                    </div>
+                    <div class="setting-group">
+                        <label>Скорость анимаций:</label>
+                        <input type="range" id="animation-speed" min="0.5" max="2" step="0.1" value="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Уведомления -->
+        <div id="notifications"></div>
+    </div>
+
+    <!-- Фоновый эффект -->
+    <div class="background-effect">
+        <div class="particles"></div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
